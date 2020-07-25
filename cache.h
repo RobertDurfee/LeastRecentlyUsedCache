@@ -24,6 +24,7 @@ struct KeyValue {
 
 extern struct KeyValue pool[POOL_SIZE + 1];
 extern key_value_pointer_t cache[CACHE_SIZE];
+extern key_value_pointer_t next;
 extern key_value_pointer_t least_recently_used;
 extern key_value_pointer_t most_recently_used;
 
