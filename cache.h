@@ -35,7 +35,7 @@ void append_new(unsigned int key, unsigned int tag, struct Value * value);
 void put(unsigned int key, unsigned int tag, struct Value * value);
 void append(unsigned int key, unsigned int tag, struct Value * value);
 
-// only these functions should be used to interact with the cache
+// only these functions should be used to mutate the cache
 
 void put_append(unsigned int key, unsigned int tag, struct Value * value);
 void use(key_value_pointer_t key_value);
