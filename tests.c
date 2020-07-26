@@ -16,6 +16,7 @@ static key_value_pointer_t n1 = 1;
 static key_value_pointer_t n2 = 2;
 static key_value_pointer_t n3 = 3;
 static key_value_pointer_t n4 = 4;
+static key_value_pointer_t n5 = 5;
 
 void reset(void) {
     for (unsigned int i = 0; i < POOL_SIZE + 1; i++) {
@@ -2219,6 +2220,7 @@ void case_33(void) {
 
 void start_8(void) {
     reset();
+
     printf(
         "-----------------------------------------------------------------------------\n"
         " BEFORE:\n"
@@ -2232,10 +2234,51 @@ void start_8(void) {
         "|                                              `-^                          |\n"
         "\n"
     );
+
+    put_new(k0, k0, &v0);
+    append_new(k0, k0, &v1);
+    put_new(k0, k0, &v0);
+
+    assert(next == n4);
+    assert(least_recently_used == n1);
+    assert(most_recently_used == n3);
+
+    assert(pool[n1].previous == 0);
+    assert(pool[n1].is_header == false);
+    assert(pool[n1].next == n2);
+
+    assert(pool[n2].previous == n1);
+    assert(pool[n2].is_header == false);
+    assert(pool[n2].next == n3);
+
+    assert(pool[n3].previous == n2);
+    assert(pool[n3].is_header == true);
+    assert(pool[n3].key == k0);
+    assert(pool[n3].tag == k0);
+    assert(pool[n3].value.value == v0.value);
+    assert(pool[n3].next == 0);
+    assert(pool[n3].last == n3);
+
+    assert(cache[k0] == n3);
+
+    assert(pool[0].previous == 0);
+    assert(pool[0].is_header == false);
+    assert(pool[0].next == 0);
+
+    for (unsigned int i = n4; i < POOL_SIZE + 1; i++) {
+        assert(pool[i].previous == 0);
+        assert(pool[i].is_header == false);
+        assert(pool[i].next == 0);
+    }
+
+    for (unsigned int i = k1; i < CACHE_SIZE; i++) {
+        assert(cache[i] == 0);
+    }
 }
 
 void case_34(void) {
     start_8();
+
     printf(
         "-----------------------------------------------------------------------------\n"
         " AFTER put_new(0, _):\n"
@@ -2249,10 +2292,53 @@ void case_34(void) {
         "|                                                   `-^                     |\n"
         "\n"
     );
+
+    put_new(k0, k0, &v0);
+
+    assert(next == n5);
+    assert(least_recently_used == n3);
+    assert(most_recently_used == n4);
+
+    assert(pool[n3].previous == 0);
+    assert(pool[n3].is_header == false);
+    assert(pool[n3].next == n1);
+
+    assert(pool[n1].previous == n3);
+    assert(pool[n1].is_header == false);
+    assert(pool[n1].next == n2);
+
+    assert(pool[n2].previous == n1);
+    assert(pool[n2].is_header == false);
+    assert(pool[n2].next == n4);
+
+    assert(pool[n4].previous == n2);
+    assert(pool[n4].is_header == true);
+    assert(pool[n4].key == k0);
+    assert(pool[n4].tag == k0);
+    assert(pool[n4].value.value == v0.value);
+    assert(pool[n4].next == 0);
+    assert(pool[n4].last == n4);
+
+    assert(cache[k0] == n4);
+
+    assert(pool[0].previous == 0);
+    assert(pool[0].is_header == false);
+    assert(pool[0].next == 0);
+
+    for (unsigned int i = n5; i < POOL_SIZE + 1; i++) {
+        assert(pool[i].previous == 0);
+        assert(pool[i].is_header == false);
+        assert(pool[i].next == 0);
+    }
+
+    for (unsigned int i = k1; i < CACHE_SIZE; i++) {
+        assert(cache[i] == 0);
+    }
 }
 
 void case_35(void) {
     start_8();
+
     printf(
         "-----------------------------------------------------------------------------\n"
         " AFTER put_new(1, _):\n"
@@ -2266,10 +2352,58 @@ void case_35(void) {
         "|                                         `-^       `-^                     |\n"
         "\n"
     );
+
+    put_new(k1, k1, &v1);
+
+    assert(next == n5);
+    assert(least_recently_used == n1);
+    assert(most_recently_used == n4);
+
+    assert(pool[n1].previous == 0);
+    assert(pool[n1].is_header == false);
+    assert(pool[n1].next == n2);
+
+    assert(pool[n2].previous == n1);
+    assert(pool[n2].is_header == false);
+    assert(pool[n2].next == n3);
+
+    assert(pool[n3].previous == n2);
+    assert(pool[n3].is_header == true);
+    assert(pool[n3].key == k0);
+    assert(pool[n3].tag == k0);
+    assert(pool[n3].value.value == v0.value);
+    assert(pool[n3].next == n4);
+    assert(pool[n3].last == n3);
+
+    assert(pool[n4].previous == n3);
+    assert(pool[n4].is_header == true);
+    assert(pool[n4].key == k1);
+    assert(pool[n4].tag == k1);
+    assert(pool[n4].value.value == v1.value);
+    assert(pool[n4].next == 0);
+    assert(pool[n4].last == n4);
+
+    assert(cache[k0] == n3);
+    assert(cache[k1] == n4);
+
+    assert(pool[0].previous == 0);
+    assert(pool[0].is_header == false);
+    assert(pool[0].next == 0);
+
+    for (unsigned int i = n5; i < POOL_SIZE + 1; i++) {
+        assert(pool[i].previous == 0);
+        assert(pool[i].is_header == false);
+        assert(pool[i].next == 0);
+    }
+
+    for (unsigned int i = k2; i < CACHE_SIZE; i++) {
+        assert(cache[i] == 0);
+    }
 }
 
 void case_36(void) {
     start_8();
+
     printf(
         "-----------------------------------------------------------------------------\n"
         " AFTER append_new(0, _):\n"
@@ -2283,10 +2417,54 @@ void case_36(void) {
         "|                                          `---------^                      |\n"
         "\n"
     );
+
+    append_new(k0, k0, &v1);
+
+    assert(next == n5);
+    assert(least_recently_used == n1);
+    assert(most_recently_used == n4);
+
+    assert(pool[n1].previous == 0);
+    assert(pool[n1].is_header == false);
+    assert(pool[n1].next == n2);
+
+    assert(pool[n2].previous == n1);
+    assert(pool[n2].is_header == false);
+    assert(pool[n2].next == n3);
+
+    assert(pool[n3].previous == n2);
+    assert(pool[n3].is_header == true);
+    assert(pool[n3].key == k0);
+    assert(pool[n3].tag == k0);
+    assert(pool[n3].value.value == v0.value);
+    assert(pool[n3].next == n4);
+    assert(pool[n3].last == n4);
+
+    assert(pool[n4].previous == n3);
+    assert(pool[n4].is_header == false);
+    assert(pool[n4].value.value == v1.value);
+    assert(pool[n4].next == 0);
+
+    assert(cache[k0] == n3);
+
+    assert(pool[0].previous == 0);
+    assert(pool[0].is_header == false);
+    assert(pool[0].next == 0);
+
+    for (unsigned int i = n5; i < POOL_SIZE + 1; i++) {
+        assert(pool[i].previous == 0);
+        assert(pool[i].is_header == false);
+        assert(pool[i].next == 0);
+    }
+
+    for (unsigned int i = k1; i < CACHE_SIZE; i++) {
+        assert(cache[i] == 0);
+    }
 }
 
 void case_37(void) {
     start_8();
+
     printf(
         "-----------------------------------------------------------------------------\n"
         " AFTER put(0, _):\n"
@@ -2300,10 +2478,49 @@ void case_37(void) {
         "|                                              `-^                          |\n"
         "\n"
     );
+
+    put(k0, k0, &v0);
+
+    assert(next == n4);
+    assert(least_recently_used == n1);
+    assert(most_recently_used == n3);
+
+    assert(pool[n1].previous == 0);
+    assert(pool[n1].is_header == false);
+    assert(pool[n1].next == n2);
+
+    assert(pool[n2].previous == n1);
+    assert(pool[n2].is_header == false);
+    assert(pool[n2].next == n3);
+
+    assert(pool[n3].previous == n2);
+    assert(pool[n3].is_header == true);
+    assert(pool[n3].key == k0);
+    assert(pool[n3].tag == k0);
+    assert(pool[n3].value.value == v0.value);
+    assert(pool[n3].next == 0);
+    assert(pool[n3].last == n3);
+
+    assert(cache[k0] == n3);
+
+    assert(pool[0].previous == 0);
+    assert(pool[0].is_header == false);
+    assert(pool[0].next == 0);
+
+    for (unsigned int i = n4; i < POOL_SIZE + 1; i++) {
+        assert(pool[i].previous == 0);
+        assert(pool[i].is_header == false);
+        assert(pool[i].next == 0);
+    }
+
+    for (unsigned int i = k1; i < CACHE_SIZE; i++) {
+        assert(cache[i] == 0);
+    }
 }
 
 void case_38(void) {
     start_8();
+
     printf(
         "-----------------------------------------------------------------------------\n"
         " AFTER put(1, _):\n"
@@ -2317,10 +2534,54 @@ void case_38(void) {
         "|                                    `-^       `-^                          |\n"
         "\n"
     );
+
+    put(k1, k1, &v1);
+
+    assert(next == n4);
+    assert(least_recently_used == n2);
+    assert(most_recently_used == n1);
+
+    assert(pool[n2].previous == 0);
+    assert(pool[n2].is_header == false);
+    assert(pool[n2].next == n3);
+
+    assert(pool[n3].previous == n2);
+    assert(pool[n3].is_header == true);
+    assert(pool[n3].key == k0);
+    assert(pool[n3].tag == k0);
+    assert(pool[n3].value.value == v0.value);
+    assert(pool[n3].next == n1);
+    assert(pool[n3].last == n3);
+
+    assert(pool[n1].previous == n3);
+    assert(pool[n1].is_header == true);
+    assert(pool[n1].key == k1);
+    assert(pool[n1].tag == k1);
+    assert(pool[n1].value.value == v1.value);
+    assert(pool[n1].next == 0);
+    assert(pool[n1].last == n1);
+
+    assert(cache[k0] == n3);
+    assert(cache[k1] == n1);
+
+    assert(pool[0].previous == 0);
+    assert(pool[0].is_header == false);
+    assert(pool[0].next == 0);
+
+    for (unsigned int i = n4; i < POOL_SIZE + 1; i++) {
+        assert(pool[i].previous == 0);
+        assert(pool[i].is_header == false);
+        assert(pool[i].next == 0);
+    }
+
+    for (unsigned int i = k2; i < CACHE_SIZE; i++) {
+        assert(cache[i] == 0);
+    }
 }
 
 void case_39(void) {
     start_8();
+
     printf(
         "-----------------------------------------------------------------------------\n"
         " AFTER append(0, _):\n"
@@ -2334,6 +2595,45 @@ void case_39(void) {
         "|                                     `---------^                           |\n"
         "\n"
     );
+
+    append(k0, k0, &v1);
+
+    assert(next == n4);
+    assert(least_recently_used == n2);
+    assert(most_recently_used == n1);
+
+    assert(pool[n2].previous == 0);
+    assert(pool[n2].is_header == false);
+    assert(pool[n2].next == n3);
+
+    assert(pool[n3].previous == n2);
+    assert(pool[n3].is_header == true);
+    assert(pool[n3].key == k0);
+    assert(pool[n3].tag == k0);
+    assert(pool[n3].value.value == v0.value);
+    assert(pool[n3].next == n1);
+    assert(pool[n3].last == n1);
+
+    assert(pool[n1].previous == n3);
+    assert(pool[n1].is_header == false);
+    assert(pool[n1].value.value == v1.value);
+    assert(pool[n1].next == 0);
+
+    assert(cache[k0] == n3);
+
+    assert(pool[0].previous == 0);
+    assert(pool[0].is_header == false);
+    assert(pool[0].next == 0);
+
+    for (unsigned int i = n4; i < POOL_SIZE + 1; i++) {
+        assert(pool[i].previous == 0);
+        assert(pool[i].is_header == false);
+        assert(pool[i].next == 0);
+    }
+
+    for (unsigned int i = k1; i < CACHE_SIZE; i++) {
+        assert(cache[i] == 0);
+    }
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2342,6 +2642,7 @@ void case_39(void) {
 
 void start_9(void) {
     reset();
+
     printf(
         "-----------------------------------------------------------------------------\n"
         " BEFORE:\n"
@@ -2355,10 +2656,56 @@ void start_9(void) {
         "|                                    `-^       `-^                          |\n"
         "\n"
     );
+    
+    put_new(k0, k0, &v0);
+    put_new(k0, k0, &v0);
+    put_new(k1, k1, &v1);
+
+    assert(next == n4);
+    assert(least_recently_used == n1);
+    assert(most_recently_used == n3);
+
+    assert(pool[n1].previous == 0);
+    assert(pool[n1].is_header == false);
+    assert(pool[n1].next == n2);
+
+    assert(pool[n2].previous == n1);
+    assert(pool[n2].is_header == true);
+    assert(pool[n2].key == k0);
+    assert(pool[n2].tag == k0);
+    assert(pool[n2].value.value == v0.value);
+    assert(pool[n2].next == n3);
+    assert(pool[n2].last == n2);
+
+    assert(pool[n3].previous == n2);
+    assert(pool[n3].is_header == true);
+    assert(pool[n3].key == k1);
+    assert(pool[n3].tag == k1);
+    assert(pool[n3].value.value == v1.value);
+    assert(pool[n3].next == 0);
+    assert(pool[n3].last == n3);
+
+    assert(cache[k0] == n2);
+    assert(cache[k1] == n3);
+
+    assert(pool[0].previous == 0);
+    assert(pool[0].is_header == false);
+    assert(pool[0].next == 0);
+
+    for (unsigned int i = n4; i < POOL_SIZE + 1; i++) {
+        assert(pool[i].previous == 0);
+        assert(pool[i].is_header == false);
+        assert(pool[i].next == 0);
+    }
+
+    for (unsigned int i = k2; i < CACHE_SIZE; i++) {
+        assert(cache[i] == 0);
+    }
 }
 
 void case_40(void) {
     start_9();
+
     printf(
         "-----------------------------------------------------------------------------\n"
         " AFTER put_new(0, _):\n"
@@ -2372,10 +2719,58 @@ void case_40(void) {
         "|                                         `-^       `-^                     |\n"
         "\n"
     );
+
+    put_new(k0, k0, &v0);
+
+    assert(next == n5);
+    assert(least_recently_used == n2);
+    assert(most_recently_used == n4);
+
+    assert(pool[n2].previous == 0);
+    assert(pool[n2].is_header == false);
+    assert(pool[n2].next == n1);
+
+    assert(pool[n1].previous == n2);
+    assert(pool[n1].is_header == false);
+    assert(pool[n1].next == n3);
+
+    assert(pool[n3].previous == n1);
+    assert(pool[n3].is_header == true);
+    assert(pool[n3].key == k1);
+    assert(pool[n3].tag == k1);
+    assert(pool[n3].value.value == v1.value);
+    assert(pool[n3].next == n4);
+    assert(pool[n3].last == n3);
+
+    assert(pool[n4].previous == n3);
+    assert(pool[n4].is_header == true);
+    assert(pool[n4].key == k0);
+    assert(pool[n4].tag == k0);
+    assert(pool[n4].value.value == v0.value);
+    assert(pool[n4].next == 0);
+    assert(pool[n4].last == n4);
+
+    assert(cache[k1] == n3);
+    assert(cache[k0] == n4);
+
+    assert(pool[0].previous == 0);
+    assert(pool[0].is_header == false);
+    assert(pool[0].next == 0);
+
+    for (unsigned int i = n5; i < POOL_SIZE + 1; i++) {
+        assert(pool[i].previous == 0);
+        assert(pool[i].is_header == false);
+        assert(pool[i].next == 0);
+    }
+
+    for (unsigned int i = k2; i < CACHE_SIZE; i++) {
+        assert(cache[i] == 0);
+    }
 }
 
 void case_41(void) {
     start_9();
+
     printf(
         "-----------------------------------------------------------------------------\n"
         " AFTER put_new(1, _):\n"
@@ -2389,10 +2784,58 @@ void case_41(void) {
         "|                                         `-^       `-^                     |\n"
         "\n"
     );
+
+    put_new(k1, k1, &v1);
+
+    assert(next == n5);
+    assert(least_recently_used == n3);
+    assert(most_recently_used == n4);
+
+    assert(pool[n3].previous == 0);
+    assert(pool[n3].is_header == false);
+    assert(pool[n3].next == n1);
+
+    assert(pool[n1].previous == n3);
+    assert(pool[n1].is_header == false);
+    assert(pool[n1].next == n2);
+
+    assert(pool[n2].previous == n1);
+    assert(pool[n2].is_header == true);
+    assert(pool[n2].key == k0);
+    assert(pool[n2].tag == k0);
+    assert(pool[n2].value.value == v0.value);
+    assert(pool[n2].next == n4);
+    assert(pool[n2].last == n2);
+
+    assert(pool[n4].previous == n2);
+    assert(pool[n4].is_header == true);
+    assert(pool[n4].key == k1);
+    assert(pool[n4].tag == k1);
+    assert(pool[n4].value.value == v1.value);
+    assert(pool[n4].next == 0);
+    assert(pool[n4].last == n4);
+
+    assert(cache[k0] == n2);
+    assert(cache[k1] == n4);
+
+    assert(pool[0].previous == 0);
+    assert(pool[0].is_header == false);
+    assert(pool[0].next == 0);
+
+    for (unsigned int i = n5; i < POOL_SIZE + 1; i++) {
+        assert(pool[i].previous == 0);
+        assert(pool[i].is_header == false);
+        assert(pool[i].next == 0);
+    }
+
+    for (unsigned int i = k2; i < CACHE_SIZE; i++) {
+        assert(cache[i] == 0);
+    }
 }
 
 void case_42(void) {
     start_9();
+
     printf(
         "-----------------------------------------------------------------------------\n"
         " AFTER put_new(2, _):\n"
@@ -2406,10 +2849,63 @@ void case_42(void) {
         "|                               `-^       `-^       `-^                     |\n"
         "\n"
     );
+
+    put_new(k2, k2, &v2);
+
+    assert(next == n5);
+    assert(least_recently_used == n1);
+    assert(most_recently_used == n4);
+
+    assert(pool[n1].previous == 0);
+    assert(pool[n1].is_header == false);
+    assert(pool[n1].next == n2);
+
+    assert(pool[n2].previous == n1);
+    assert(pool[n2].is_header == true);
+    assert(pool[n2].key == k0);
+    assert(pool[n2].tag == k0);
+    assert(pool[n2].value.value == v0.value);
+    assert(pool[n2].next == n3);
+    assert(pool[n2].last == n2);
+
+    assert(pool[n3].previous == n2);
+    assert(pool[n3].is_header == true);
+    assert(pool[n3].key == k1);
+    assert(pool[n3].tag == k1);
+    assert(pool[n3].value.value == v1.value);
+    assert(pool[n3].next == n4);
+    assert(pool[n3].last == n3);
+
+    assert(pool[n4].previous == n3);
+    assert(pool[n4].is_header == true);
+    assert(pool[n4].key == k2);
+    assert(pool[n4].tag == k2);
+    assert(pool[n4].value.value == v2.value);
+    assert(pool[n4].next == 0);
+    assert(pool[n4].last == n4);
+
+    assert(cache[k0] == n2);
+    assert(cache[k1] == n3);
+    assert(cache[k2] == n4);
+
+    assert(pool[0].previous == 0);
+    assert(pool[0].is_header == false);
+    assert(pool[0].next == 0);
+
+    for (unsigned int i = n5; i < POOL_SIZE + 1; i++) {
+        assert(pool[i].previous == 0);
+        assert(pool[i].is_header == false);
+        assert(pool[i].next == 0);
+    }
+
+    for (unsigned int i = k3; i < CACHE_SIZE; i++) {
+        assert(cache[i] == 0);
+    }
 }
 
 void case_43(void) {
     start_9();
+
     printf(
         "-----------------------------------------------------------------------------\n"
         " AFTER append_new(0, _):\n"
@@ -2423,10 +2919,59 @@ void case_43(void) {
         "|                               `-^        `---------^                      |\n"
         "\n"
     );
+
+    append_new(k0, k0, &v1);
+
+    assert(next == n5);
+    assert(least_recently_used == n1);
+    assert(most_recently_used == n4);
+
+    assert(pool[n1].previous == 0);
+    assert(pool[n1].is_header == false);
+    assert(pool[n1].next == n3);
+
+    assert(pool[n3].previous == n1);
+    assert(pool[n3].is_header == true);
+    assert(pool[n3].key == k1);
+    assert(pool[n3].tag == k1);
+    assert(pool[n3].value.value == v1.value);
+    assert(pool[n3].next == n2);
+    assert(pool[n3].last == n3);
+
+    assert(pool[n2].previous == n3);
+    assert(pool[n2].is_header == true);
+    assert(pool[n2].key == k0);
+    assert(pool[n2].tag == k0);
+    assert(pool[n2].value.value == v0.value);
+    assert(pool[n2].next == n4);
+    assert(pool[n2].last == n4);
+
+    assert(pool[n4].previous == n3);
+    assert(pool[n4].is_header == false);
+    assert(pool[n4].value.value == v1.value);
+    assert(pool[n4].next == 0);
+
+    assert(cache[k1] == n3);
+    assert(cache[k0] == n2);
+
+    assert(pool[0].previous == 0);
+    assert(pool[0].is_header == false);
+    assert(pool[0].next == 0);
+
+    for (unsigned int i = n5; i < POOL_SIZE + 1; i++) {
+        assert(pool[i].previous == 0);
+        assert(pool[i].is_header == false);
+        assert(pool[i].next == 0);
+    }
+
+    for (unsigned int i = k2; i < CACHE_SIZE; i++) {
+        assert(cache[i] == 0);
+    }
 }
 
 void case_44(void) {
     start_9();
+
     printf(
         "-----------------------------------------------------------------------------\n"
         " AFTER append_new(1, _):\n"
@@ -2440,10 +2985,59 @@ void case_44(void) {
         "|                               `-^        `---------^                      |\n"
         "\n"
     );
+
+    append_new(k1, k1, &v2);
+
+    assert(next == n5);
+    assert(least_recently_used == n1);
+    assert(most_recently_used == n4);
+
+    assert(pool[n1].previous == 0);
+    assert(pool[n1].is_header == false);
+    assert(pool[n1].next == n2);
+
+    assert(pool[n2].previous == n1);
+    assert(pool[n2].is_header == true);
+    assert(pool[n2].key == k0);
+    assert(pool[n2].tag == k0);
+    assert(pool[n2].value.value == v0.value);
+    assert(pool[n2].next == n3);
+    assert(pool[n2].last == n2);
+
+    assert(pool[n3].previous == n2);
+    assert(pool[n3].is_header == true);
+    assert(pool[n3].key == k1);
+    assert(pool[n3].tag == k1);
+    assert(pool[n3].value.value == v1.value);
+    assert(pool[n3].next == n4);
+    assert(pool[n3].last == n4);
+
+    assert(pool[n4].previous == n3);
+    assert(pool[n4].is_header == false);
+    assert(pool[n4].value.value == v2.value);
+    assert(pool[n4].next == 0);
+
+    assert(cache[k0] == n2);
+    assert(cache[k1] == n3);
+
+    assert(pool[0].previous == 0);
+    assert(pool[0].is_header == false);
+    assert(pool[0].next == 0);
+
+    for (unsigned int i = n5; i < POOL_SIZE + 1; i++) {
+        assert(pool[i].previous == 0);
+        assert(pool[i].is_header == false);
+        assert(pool[i].next == 0);
+    }
+
+    for (unsigned int i = k2; i < CACHE_SIZE; i++) {
+        assert(cache[i] == 0);
+    }
 }
 
 void case_45(void) {
     start_9();
+
     printf(
         "-----------------------------------------------------------------------------\n"
         " AFTER put(0, _):\n"
@@ -2457,10 +3051,54 @@ void case_45(void) {
         "|                                    `-^       `-^                          |\n"
         "\n"
     );
+
+    put(k0, k0, &v0);
+
+    assert(next == n4);
+    assert(least_recently_used == n1);
+    assert(most_recently_used == n2);
+
+    assert(pool[n1].previous == 0);
+    assert(pool[n1].is_header == false);
+    assert(pool[n1].next == n3);
+
+    assert(pool[n3].previous == n1);
+    assert(pool[n3].is_header == true);
+    assert(pool[n3].key == k1);
+    assert(pool[n3].tag == k1);
+    assert(pool[n3].value.value == v1.value);
+    assert(pool[n3].next == n2);
+    assert(pool[n3].last == n3);
+
+    assert(pool[n2].previous == n3);
+    assert(pool[n2].is_header == true);
+    assert(pool[n2].key == k0);
+    assert(pool[n2].tag == k0);
+    assert(pool[n2].value.value == v0.value);
+    assert(pool[n2].next == 0);
+    assert(pool[n2].last == n2);
+
+    assert(cache[k1] == n3);
+    assert(cache[k0] == n2);
+
+    assert(pool[0].previous == 0);
+    assert(pool[0].is_header == false);
+    assert(pool[0].next == 0);
+
+    for (unsigned int i = n4; i < POOL_SIZE + 1; i++) {
+        assert(pool[i].previous == 0);
+        assert(pool[i].is_header == false);
+        assert(pool[i].next == 0);
+    }
+
+    for (unsigned int i = k2; i < CACHE_SIZE; i++) {
+        assert(cache[i] == 0);
+    }
 }
 
 void case_46(void) {
     start_9();
+
     printf(
         "-----------------------------------------------------------------------------\n"
         " AFTER put(1, _):\n"
@@ -2474,10 +3112,54 @@ void case_46(void) {
         "|                                    `-^       `-^                          |\n"
         "\n"
     );
+
+    put(k1, k1, &v1);
+
+    assert(next == n4);
+    assert(least_recently_used == n1);
+    assert(most_recently_used == n3);
+
+    assert(pool[n1].previous == 0);
+    assert(pool[n1].is_header == false);
+    assert(pool[n1].next == n2);
+
+    assert(pool[n2].previous == n1);
+    assert(pool[n2].is_header == true);
+    assert(pool[n2].key == k0);
+    assert(pool[n2].tag == k0);
+    assert(pool[n2].value.value == v0.value);
+    assert(pool[n2].next == n3);
+    assert(pool[n2].last == n2);
+
+    assert(pool[n3].previous == n2);
+    assert(pool[n3].is_header == true);
+    assert(pool[n3].key == k1);
+    assert(pool[n3].tag == k1);
+    assert(pool[n3].value.value == v1.value);
+    assert(pool[n3].next == 0);
+    assert(pool[n3].last == n3);
+
+    assert(cache[k0] == n2);
+    assert(cache[k1] == n3);
+
+    assert(pool[0].previous == 0);
+    assert(pool[0].is_header == false);
+    assert(pool[0].next == 0);
+
+    for (unsigned int i = n4; i < POOL_SIZE + 1; i++) {
+        assert(pool[i].previous == 0);
+        assert(pool[i].is_header == false);
+        assert(pool[i].next == 0);
+    }
+
+    for (unsigned int i = k2; i < CACHE_SIZE; i++) {
+        assert(cache[i] == 0);
+    }
 }
 
 void case_47(void) {
     start_9();
+
     printf(
         "-----------------------------------------------------------------------------\n"
         " AFTER put(2, _):\n"
@@ -2491,10 +3173,59 @@ void case_47(void) {
         "|                          `-^       `-^       `-^                          |\n"
         "\n"
     );
+
+    put(k2, k2, &v2);
+
+    assert(next == n4);
+    assert(least_recently_used == n2);
+    assert(most_recently_used == n1);
+
+    assert(pool[n2].previous == 0);
+    assert(pool[n2].is_header == true);
+    assert(pool[n2].key == k0);
+    assert(pool[n2].tag == k0);
+    assert(pool[n2].value.value == v0.value);
+    assert(pool[n2].next == n3);
+    assert(pool[n2].last == n2);
+
+    assert(pool[n3].previous == n2);
+    assert(pool[n3].is_header == true);
+    assert(pool[n3].key == k1);
+    assert(pool[n3].tag == k1);
+    assert(pool[n3].value.value == v1.value);
+    assert(pool[n3].next == n1);
+    assert(pool[n3].last == n3);
+
+    assert(pool[n1].previous == n3);
+    assert(pool[n1].is_header == true);
+    assert(pool[n1].key == k2);
+    assert(pool[n1].tag == k2);
+    assert(pool[n1].value.value == v2.value);
+    assert(pool[n1].next == 0);
+    assert(pool[n1].last == n1);
+
+    assert(cache[k0] == n2);
+    assert(cache[k1] == n3);
+    assert(cache[k2] == n1);
+
+    assert(pool[0].previous == 0);
+    assert(pool[0].is_header == false);
+    assert(pool[0].next == 0);
+
+    for (unsigned int i = n4; i < POOL_SIZE + 1; i++) {
+        assert(pool[i].previous == 0);
+        assert(pool[i].is_header == false);
+        assert(pool[i].next == 0);
+    }
+
+    for (unsigned int i = k3; i < CACHE_SIZE; i++) {
+        assert(cache[i] == 0);
+    }
 }
 
 void case_48(void) {
     start_9();
+
     printf(
         "-----------------------------------------------------------------------------\n"
         " AFTER append(0, _):\n"
@@ -2508,6 +3239,50 @@ void case_48(void) {
         "|                          `-^        `---------^                           |\n"
         "\n"
     );
+
+    append(k0, k0, &v1);
+
+    assert(next == n4);
+    assert(least_recently_used == n3);
+    assert(most_recently_used == n1);
+
+    assert(pool[n3].previous == 0);
+    assert(pool[n3].is_header == true);
+    assert(pool[n3].key == k1);
+    assert(pool[n3].tag == k1);
+    assert(pool[n3].value.value == v1.value);
+    assert(pool[n3].next == n2);
+    assert(pool[n3].last == n3);
+
+    assert(pool[n2].previous == n3);
+    assert(pool[n2].is_header == true);
+    assert(pool[n2].key == k0);
+    assert(pool[n2].tag == k0);
+    assert(pool[n2].value.value == v0.value);
+    assert(pool[n2].next == n1);
+    assert(pool[n2].last == n1);
+
+    assert(pool[n1].previous == n2);
+    assert(pool[n1].is_header == false);
+    assert(pool[n1].value.value == v1.value);
+    assert(pool[n1].next == 0);
+
+    assert(cache[k1] == n3);
+    assert(cache[k0] == n2);
+
+    assert(pool[0].previous == 0);
+    assert(pool[0].is_header == false);
+    assert(pool[0].next == 0);
+
+    for (unsigned int i = n4; i < POOL_SIZE + 1; i++) {
+        assert(pool[i].previous == 0);
+        assert(pool[i].is_header == false);
+        assert(pool[i].next == 0);
+    }
+
+    for (unsigned int i = k2; i < CACHE_SIZE; i++) {
+        assert(cache[i] == 0);
+    }
 }
 
 void case_49(void) {
@@ -2525,6 +3300,50 @@ void case_49(void) {
         "|                          `-^        `---------^                           |\n"
         "\n"
     );
+
+    append(k1, k1, &v2);
+
+    assert(next == n4);
+    assert(least_recently_used == n2);
+    assert(most_recently_used == n1);
+
+    assert(pool[n2].previous == 0);
+    assert(pool[n2].is_header == true);
+    assert(pool[n2].key == k0);
+    assert(pool[n2].tag == k0);
+    assert(pool[n2].value.value == v0.value);
+    assert(pool[n2].next == n3);
+    assert(pool[n2].last == n2);
+
+    assert(pool[n3].previous == n2);
+    assert(pool[n3].is_header == true);
+    assert(pool[n3].key == k1);
+    assert(pool[n3].tag == k1);
+    assert(pool[n3].value.value == v1.value);
+    assert(pool[n3].next == n1);
+    assert(pool[n3].last == n1);
+
+    assert(pool[n1].previous == n3);
+    assert(pool[n1].is_header == false);
+    assert(pool[n1].value.value == v2.value);
+    assert(pool[n1].next == 0);
+
+    assert(cache[k0] == n2);
+    assert(cache[k1] == n3);
+
+    assert(pool[0].previous == 0);
+    assert(pool[0].is_header == false);
+    assert(pool[0].next == 0);
+
+    for (unsigned int i = n4; i < POOL_SIZE + 1; i++) {
+        assert(pool[i].previous == 0);
+        assert(pool[i].is_header == false);
+        assert(pool[i].next == 0);
+    }
+
+    for (unsigned int i = k2; i < CACHE_SIZE; i++) {
+        assert(cache[i] == 0);
+    }
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
