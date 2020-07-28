@@ -30,14 +30,12 @@ extern node_ptr_t lru_node_ptr;
 extern node_ptr_t mru_node_ptr;
 
 // these functions are for testing purposes only
-
 void put_new(key_t key, tag_t tag, value_t * value);
 void append_new(key_t key, tag_t tag, value_t * value);
 void put(key_t key, tag_t tag, value_t * value);
 void append(key_t key, tag_t tag, value_t * value);
 
 // only these functions should be used to mutate the cache
-
 void put_append(key_t key, tag_t tag, value_t * value);
 void use(node_ptr_t node_ptr);
 
