@@ -1,43 +1,44 @@
 #ifndef CACHE_H
 #define CACHE_H
 
-#define POOL_SIZE 0x0F
-#define CACHE_SIZE 0x0F
-#define NONE 0
+#define NODE_POOL_SIZE 0x0F
+#define NODE_CACHE_SIZE 0x0F
 
 typedef enum { false, true } bool;
-typedef unsigned int key_value_pointer_t;
+typedef unsigned int node_ptr_t;
+typedef unsigned int key_t;
+typedef unsigned long tag_t;
 
-struct Value {
+typedef struct {
     unsigned int value;
-};
+} value_t;
 
-struct KeyValue {
-    key_value_pointer_t previous;
-    bool is_header;
-    unsigned int key;
-    unsigned int tag;
-    struct Value value;
-    key_value_pointer_t next;
-    key_value_pointer_t last;
-};
+typedef struct {
+    node_ptr_t previous;
+    bool is_first;
+    key_t key;
+    tag_t tag;
+    value_t value;
+    node_ptr_t next;
+    node_ptr_t last;
+} node_t;
 
-extern struct KeyValue pool[POOL_SIZE + 1];
-extern key_value_pointer_t cache[CACHE_SIZE];
-extern key_value_pointer_t next;
-extern key_value_pointer_t least_recently_used;
-extern key_value_pointer_t most_recently_used;
+extern node_t node_pool[NODE_POOL_SIZE + 1];
+extern node_ptr_t node_cache[NODE_CACHE_SIZE];
+extern node_ptr_t next_node_ptr;
+extern node_ptr_t lru_node_ptr;
+extern node_ptr_t mru_node_ptr;
 
 // these functions are for testing purposes only
 
-void put_new(unsigned int key, unsigned int tag, struct Value * value);
-void append_new(unsigned int key, unsigned int tag, struct Value * value);
-void put(unsigned int key, unsigned int tag, struct Value * value);
-void append(unsigned int key, unsigned int tag, struct Value * value);
+void put_new(key_t key, tag_t tag, value_t * value);
+void append_new(key_t key, tag_t tag, value_t * value);
+void put(key_t key, tag_t tag, value_t * value);
+void append(key_t key, tag_t tag, value_t * value);
 
 // only these functions should be used to mutate the cache
 
-void put_append(unsigned int key, unsigned int tag, struct Value * value);
-void use(key_value_pointer_t key_value);
+void put_append(key_t key, tag_t tag, value_t * value);
+void use(node_ptr_t node_ptr);
 
 #endif // CACHE_H
