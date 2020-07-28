@@ -695,18 +695,18 @@ void case_10(void) {
     put_new(key_0, key_0, &value_0);
 
     assert(next_node_ptr == node_ptr_4);
-    assert(lru_node_ptr == node_ptr_1);
+    assert(lru_node_ptr == node_ptr_2);
     assert(mru_node_ptr == node_ptr_3);
 
-    assert(node_pool[node_ptr_1].previous == 0);
-    assert(node_pool[node_ptr_1].is_first == false);
-    assert(node_pool[node_ptr_1].next == node_ptr_2);
-
-    assert(node_pool[node_ptr_2].previous == node_ptr_1);
+    assert(node_pool[node_ptr_2].previous == 0);
     assert(node_pool[node_ptr_2].is_first == false);
-    assert(node_pool[node_ptr_2].next == node_ptr_3);
+    assert(node_pool[node_ptr_2].next == node_ptr_1);
 
-    assert(node_pool[node_ptr_3].previous == node_ptr_2);
+    assert(node_pool[node_ptr_1].previous == node_ptr_2);
+    assert(node_pool[node_ptr_1].is_first == false);
+    assert(node_pool[node_ptr_1].next == node_ptr_3);
+
+    assert(node_pool[node_ptr_3].previous == node_ptr_1);
     assert(node_pool[node_ptr_3].is_first == true);
     assert(node_pool[node_ptr_3].key == key_0);
     assert(node_pool[node_ptr_3].tag == key_0);
@@ -2950,7 +2950,7 @@ void case_43(void) {
     assert(node_pool[node_ptr_2].next == node_ptr_4);
     assert(node_pool[node_ptr_2].last == node_ptr_4);
 
-    assert(node_pool[node_ptr_4].previous == node_ptr_3);
+    assert(node_pool[node_ptr_4].previous == node_ptr_2);
     assert(node_pool[node_ptr_4].is_first == false);
     assert(node_pool[node_ptr_4].value.value == value_1.value);
     assert(node_pool[node_ptr_4].next == 0);
@@ -5368,7 +5368,7 @@ void case_77(void) {
     assert(node_pool[node_ptr_3].value.value == value_2.value);
     assert(node_pool[node_ptr_3].next == node_ptr_1);
 
-    assert(node_pool[node_ptr_1].previous == node_ptr_2);
+    assert(node_pool[node_ptr_1].previous == node_ptr_3);
     assert(node_pool[node_ptr_1].is_first == true);
     assert(node_pool[node_ptr_1].key == key_2);
     assert(node_pool[node_ptr_1].tag == key_2);
@@ -5884,7 +5884,7 @@ void case_84(void) {
     assert(node_pool[node_ptr_2].previous == node_ptr_1);
     assert(node_pool[node_ptr_2].is_first == false);
     assert(node_pool[node_ptr_2].value.value == value_1.value);
-    assert(node_pool[node_ptr_2].next == node_ptr_4);
+    assert(node_pool[node_ptr_2].next == node_ptr_3);
 
     assert(node_pool[node_ptr_3].previous == node_ptr_2);
     assert(node_pool[node_ptr_3].is_first == true);
@@ -5894,7 +5894,7 @@ void case_84(void) {
     assert(node_pool[node_ptr_3].next == node_ptr_4);
     assert(node_pool[node_ptr_3].last == node_ptr_4);
 
-    assert(node_pool[node_ptr_4].previous == node_ptr_2);
+    assert(node_pool[node_ptr_4].previous == node_ptr_3);
     assert(node_pool[node_ptr_4].is_first == false);
     assert(node_pool[node_ptr_4].value.value == value_2.value);
     assert(node_pool[node_ptr_4].next == 0);
@@ -6188,7 +6188,7 @@ void case_89(void) {
     assert(node_pool[node_ptr_2].is_first == false);
     assert(node_pool[node_ptr_2].next == node_ptr_3);
 
-    assert(node_pool[node_ptr_3].previous == 0);
+    assert(node_pool[node_ptr_3].previous == node_ptr_2);
     assert(node_pool[node_ptr_3].is_first == true);
     assert(node_pool[node_ptr_3].key == key_1);
     assert(node_pool[node_ptr_3].tag == key_1);
@@ -6319,7 +6319,7 @@ void case_90(void) {
     assert(node_pool[node_ptr_3].is_first == false);
     assert(node_pool[node_ptr_3].next == node_ptr_4);
 
-    assert(node_pool[node_ptr_4].previous == 0);
+    assert(node_pool[node_ptr_4].previous == node_ptr_3);
     assert(node_pool[node_ptr_4].is_first == true);
     assert(node_pool[node_ptr_4].key == key_0);
     assert(node_pool[node_ptr_4].tag == key_0);
@@ -6659,8 +6659,8 @@ void start_15(void) {
         "\n"
     );
 
-    put_new(key_0, key_0, &value_0);
-    put_new(key_0, key_0, &value_0);
+    put_new(key_1, key_1, &value_1);
+    put_new(key_1, key_1, &value_1);
     put_new(key_0, key_0, &value_0);
     append(key_0, key_0, &value_1);
     append(key_0, key_0, &value_2);
