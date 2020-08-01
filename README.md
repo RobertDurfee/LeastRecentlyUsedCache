@@ -1,2 +1,2 @@
 # Least Recently Used Cache
-A fixed-size cache for variable-length arrays with least recently used replacement and static allocation. 
+A direct-mapped cache for variable-length arrays with least recently used replacement and static allocation. 
